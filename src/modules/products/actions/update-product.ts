@@ -1,14 +1,12 @@
 "use server";
 
-import slugify from "slugify";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-
 import { connectDB } from "@/lib/mongodb";
 import { Product } from "@/models/product.model";
 import { productSchema } from "../validations/product-schema";
+import slugify from "slugify";
+import { revalidatePath } from "next/cache";
 
-export async function createProduct(formData: FormData) {
+export async function updateProduct(id: string, formData: FormData) {
   try {
     await connectDB();
 
@@ -22,25 +20,15 @@ export async function createProduct(formData: FormData) {
     };
 
     const validated = productSchema.parse(rawData);
+    const slug = slugify(validated.title, { lower: true, strict: true });
 
-    const slug = slugify(validated.title, {
-      lower: true,
-      strict: true,
-    });
-
-    const product = await Product.create({
-      ...validated,
-      slug,
-    });
+    await Product.findByIdAndUpdate(id, { ...validated, slug });
 
     revalidatePath("/admin/products");
-    redirect("/admin/products");
-  } catch (error: any) {
-    console.log(error);
+    revalidatePath(`/products/${slug}`);
 
-    return {
-      success: false,
-      error: error.message,
-    };
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
   }
 }
