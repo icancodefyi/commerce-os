@@ -36,10 +36,8 @@ export async function createProduct(formData: FormData): Promise<void> {
     revalidatePath("/admin/products");
     redirect("/admin/products");
   } catch (error: any) {
-    console.log(error);
-
-    console.log(error);
-    // redirect throws internally so we just swallow non-redirect errors
+    // re-throw redirect so Next.js can handle it
     if ((error as any).digest?.startsWith("NEXT_REDIRECT")) throw error;
+    console.error(error);
   }
 }
