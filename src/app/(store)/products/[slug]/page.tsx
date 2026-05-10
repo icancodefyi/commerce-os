@@ -1,6 +1,9 @@
 import { getProductBySlug } from "@/modules/products/server/queries";
 import { AddToCartButton } from "@/modules/cart/components/add-to-cart-button";
 import { notFound } from "next/navigation";
+import Image from "next/image";
+
+const FALLBACK = "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=600&h=800&fit=crop";
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
@@ -12,11 +15,21 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   if (!product) return notFound();
 
+  const image = product.images?.[0] ?? FALLBACK;
+
   return (
     <main className="max-w-7xl mx-auto px-6 py-16">
       <div className="grid md:grid-cols-2 gap-16 lg:gap-24">
         {/* Image */}
-        <div className="aspect-[3/4] bg-zinc-50" />
+        <div className="relative aspect-[3/4] overflow-hidden">
+          <Image
+            src={image}
+            alt={product.title}
+            fill
+            priority
+            className="object-cover object-center"
+          />
+        </div>
 
         {/* Details */}
         <div className="flex flex-col justify-center py-8">

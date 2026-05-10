@@ -31,7 +31,7 @@ export async function FeaturedProducts() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-14">
         {featured.map((product, i) => (
           <FadeIn key={product._id} delay={i * 0.1}>
-            <ProductCard product={product} />
+            <ProductCard product={product} index={i} />
           </FadeIn>
         ))}
       </div>

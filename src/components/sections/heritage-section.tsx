@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { FadeIn } from "@/components/shared/fade-in";
 
 const highlights = [
@@ -14,7 +15,14 @@ export function HeritageSection() {
         <div className="grid md:grid-cols-2 gap-16 lg:gap-28 items-center">
           {/* Image */}
           <FadeIn direction="left">
-            <div className="aspect-[4/5] bg-zinc-200 w-full" />
+            <div className="relative aspect-[4/5] w-full overflow-hidden">
+              <Image
+                src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=1000&fit=crop"
+                alt="Heritage craftsmanship"
+                fill
+                className="object-cover object-center"
+              />
+            </div>
           </FadeIn>
 
           {/* Text */}
