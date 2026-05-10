@@ -5,6 +5,7 @@ const ProductSchema = new Schema(
     title: {
       type: String,
       required: true,
+      trim: true,
     },
 
     slug: {
@@ -15,11 +16,17 @@ const ProductSchema = new Schema(
 
     description: {
       type: String,
+      default: "",
     },
 
     price: {
       type: Number,
       required: true,
+    },
+
+    comparePrice: {
+      type: Number,
+      default: 0,
     },
 
     images: {
@@ -30,6 +37,17 @@ const ProductSchema = new Schema(
     stock: {
       type: Number,
       default: 0,
+    },
+
+    category: {
+      type: String,
+      default: "",
+    },
+
+    status: {
+      type: String,
+      enum: ["draft", "active"],
+      default: "active",
     },
   },
   {
