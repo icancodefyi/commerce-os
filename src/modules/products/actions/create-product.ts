@@ -8,7 +8,7 @@ import { connectDB } from "@/lib/mongodb";
 import { Product } from "@/models/product.model";
 import { productSchema } from "../validations/product-schema";
 
-export async function createProduct(formData: FormData) {
+export async function createProduct(formData: FormData): Promise<void> {
   try {
     await connectDB();
 
@@ -38,9 +38,8 @@ export async function createProduct(formData: FormData) {
   } catch (error: any) {
     console.log(error);
 
-    return {
-      success: false,
-      error: error.message,
-    };
+    console.log(error);
+    // redirect throws internally so we just swallow non-redirect errors
+    if ((error as any).digest?.startsWith("NEXT_REDIRECT")) throw error;
   }
 }
