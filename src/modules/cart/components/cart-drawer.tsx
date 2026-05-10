@@ -76,9 +76,12 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
               <span>Total</span>
               <span>₹{total()}</span>
             </div>
-            <button className="w-full bg-black text-white py-3 rounded-xl">
+            <a
+              href="/checkout"
+              className="w-full bg-black text-white py-3 rounded-xl block text-center"
+            >
               Checkout
-            </button>
+            </a>
           </div>
         )}
       </div>
