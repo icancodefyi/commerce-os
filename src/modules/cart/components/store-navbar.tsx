@@ -34,13 +34,6 @@ export function StoreNavbar() {
             : "bg-white/80 backdrop-blur-sm"
         }`}
       >
-        {/* Announcement bar inside nav on desktop */}
-        <div className="hidden md:block bg-zinc-900 text-white py-2 text-center">
-          <p className="text-[10px] tracking-[0.2em] uppercase text-zinc-400">
-            Complimentary worldwide shipping on orders above ₹2,999
-          </p>
-        </div>
-
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-8">
           {/* Logo */}
           <Link
@@ -92,8 +85,8 @@ export function StoreNavbar() {
         </div>
       </nav>
 
-      {/* Spacer — accounts for fixed navbar + announcement bar */}
-      <div className="h-16 md:h-[72px]" />
+        {/* Spacer — fixed navbar only */}
+      <div className="h-16" />
 
       {/* Mobile menu */}
       <div
