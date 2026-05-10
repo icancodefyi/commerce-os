@@ -1,24 +1,38 @@
 "use server";
 
+import crypto from "crypto";
 import { connectDB } from "@/lib/mongodb";
 import { Order } from "@/models/order.model";
 import type { Address } from "@/types/address";
 import type { CartItem } from "@/types/cart";
 
-interface CreateOrderInput {
+interface PlaceOrderInput {
   items: CartItem[];
   address: Address;
   razorpayOrderId: string;
-  paymentId: string;
+  razorpayPaymentId: string;
+  razorpaySignature: string;
 }
 
-export async function createOrder({
+export async function placeOrder({
   items,
   address,
   razorpayOrderId,
-  paymentId,
-}: CreateOrderInput) {
+  razorpayPaymentId,
+  razorpaySignature,
+}: PlaceOrderInput) {
   try {
+    // Verify signature
+    const body = `${razorpayOrderId}|${razorpayPaymentId}`;
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET!)
+      .update(body)
+      .digest("hex");
+
+    if (expectedSignature !== razorpaySignature) {
+      return { success: false, error: "Payment verification failed." };
+    }
+
     await connectDB();
 
     const orderItems = items.map((i) => ({
@@ -41,7 +55,7 @@ export async function createOrder({
       total: subtotal,
       status: "paid",
       razorpayOrderId,
-      paymentId,
+      paymentId: razorpayPaymentId,
     });
 
     const plain = order.toObject();

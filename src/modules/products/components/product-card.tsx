@@ -1,35 +1,24 @@
 import Link from "next/link";
+import type { Product } from "@/types/product";
 
-interface ProductCardProps {
-  product: any;
-}
-
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product }: { product: Product }) {
   return (
-    <Link
-      href={`/products/${product.slug}`}
-      className="border rounded-xl p-4 block hover:shadow-lg transition"
-    >
-      <div className="aspect-square bg-zinc-100 rounded-lg mb-4" />
+    <Link href={`/products/${product.slug}`} className="group block">
+      <div className="aspect-[3/4] bg-zinc-50 overflow-hidden mb-4">
+        <div className="w-full h-full bg-zinc-100 group-hover:scale-105 transition-transform duration-700 ease-in-out" />
+      </div>
 
-      <h2 className="font-semibold text-lg">
-        {product.title}
-      </h2>
-
-      <p className="text-sm text-zinc-500 mt-1">
-        {product.category}
-      </p>
-
-      <div className="mt-3 flex items-center gap-2">
-        <span className="font-bold text-lg">
-          ₹{product.price}
-        </span>
-
-        {product.comparePrice > 0 && (
-          <span className="text-sm line-through text-zinc-400">
-            ₹{product.comparePrice}
-          </span>
-        )}
+      <div className="space-y-1">
+        <p className="text-xs tracking-widest uppercase text-zinc-400">{product.category}</p>
+        <h3 className="font-serif text-lg leading-snug group-hover:text-zinc-500 transition-colors">
+          {product.title}
+        </h3>
+        <div className="flex items-baseline gap-3 pt-1">
+          <span className="text-sm">₹{product.price}</span>
+          {product.comparePrice > 0 && (
+            <span className="text-xs line-through text-zinc-300">₹{product.comparePrice}</span>
+          )}
+        </div>
       </div>
     </Link>
   );

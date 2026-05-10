@@ -15,8 +15,11 @@ export default function CheckoutPage() {
 
   if (items.length === 0) {
     return (
-      <main className="max-w-2xl mx-auto py-20 px-4 text-center">
-        <p className="text-zinc-400">Your cart is empty.</p>
+      <main className="max-w-2xl mx-auto px-6 py-32 text-center">
+        <p className="font-serif text-3xl text-zinc-300 mb-3">Empty</p>
+        <p className="text-xs tracking-widest uppercase text-zinc-400">
+          Add items to your cart to continue
+        </p>
       </main>
     );
   }
@@ -25,29 +28,38 @@ export default function CheckoutPage() {
     <>
       <Script src="https://checkout.razorpay.com/v1/checkout.js" />
 
-      <main className="max-w-5xl mx-auto py-10 px-4">
-        <h1 className="text-2xl font-bold mb-8">Checkout</h1>
+      <main className="max-w-6xl mx-auto px-6 py-16">
+        <div className="mb-12">
+          <p className="text-xs tracking-widest uppercase text-zinc-400 mb-2">Secure</p>
+          <h1 className="font-serif text-4xl font-normal">Checkout</h1>
+        </div>
 
-        <div className="grid md:grid-cols-2 gap-10">
+        <div className="grid md:grid-cols-[1fr_400px] gap-16">
+          {/* Left — steps */}
           <div>
             {step === "address" ? (
               <AddressForm onComplete={() => setStep("payment")} />
             ) : (
-              <div className="space-y-4">
-                <div className="border rounded-xl p-4 text-sm space-y-1">
-                  <div className="flex justify-between items-center mb-2">
-                    <p className="font-semibold">Shipping to</p>
+              <div className="space-y-6">
+                {/* Address review */}
+                <div className="border border-zinc-100 p-6">
+                  <div className="flex justify-between items-start mb-4">
+                    <p className="text-xs tracking-widest uppercase text-zinc-400">
+                      Shipping to
+                    </p>
                     <button
                       onClick={() => setStep("address")}
-                      className="text-xs underline text-zinc-500"
+                      className="text-xs tracking-widest uppercase text-zinc-400 hover:text-zinc-900 transition-colors underline underline-offset-2"
                     >
                       Change
                     </button>
                   </div>
-                  <p>{address?.fullName}</p>
-                  <p>{address?.line1}{address?.line2 ? `, ${address.line2}` : ""}</p>
-                  <p>{address?.city}, {address?.state} — {address?.pincode}</p>
-                  <p>{address?.phone}</p>
+                  <div className="space-y-1 text-sm text-zinc-600">
+                    <p className="font-medium text-zinc-900">{address?.fullName}</p>
+                    <p>{address?.line1}{address?.line2 ? `, ${address.line2}` : ""}</p>
+                    <p>{address?.city}, {address?.state} — {address?.pincode}</p>
+                    <p className="text-zinc-400">{address?.phone}</p>
+                  </div>
                 </div>
 
                 <PaymentButton />
@@ -55,6 +67,7 @@ export default function CheckoutPage() {
             )}
           </div>
 
+          {/* Right — summary */}
           <OrderSummary items={items} />
         </div>
       </main>

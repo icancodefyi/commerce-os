@@ -12,27 +12,35 @@ export function StoreNavbar() {
 
   return (
     <>
-      <nav className="border-b px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="font-bold text-lg">
-          Commerce OS
-        </Link>
-        <div className="flex items-center gap-6">
-          <Link href="/products" className="text-sm hover:underline">
-            Products
+      <nav className="fixed top-0 inset-x-0 z-30 bg-white/90 backdrop-blur-sm border-b border-zinc-100">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <Link href="/" className="font-serif text-xl tracking-wide">
+            Commerce OS
           </Link>
+
+          <div className="hidden md:flex items-center gap-10">
+            <Link href="/products" className="text-xs tracking-widest uppercase text-zinc-500 hover:text-zinc-900 transition-colors">
+              Collections
+            </Link>
+            <Link href="/" className="text-xs tracking-widest uppercase text-zinc-500 hover:text-zinc-900 transition-colors">
+              Story
+            </Link>
+          </div>
+
           <button
             onClick={() => setDrawerOpen(true)}
-            className="relative"
+            className="relative flex items-center gap-2 text-zinc-700 hover:text-zinc-900 transition-colors"
           >
-            <ShoppingBag size={20} />
+            <ShoppingBag size={18} strokeWidth={1.5} />
             {count > 0 && (
-              <span className="absolute -top-2 -right-2 bg-black text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
-                {count}
-              </span>
+              <span className="text-xs font-medium text-zinc-500">({count})</span>
             )}
           </button>
         </div>
       </nav>
+
+      {/* Spacer for fixed navbar */}
+      <div className="h-16" />
 
       <CartDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
     </>

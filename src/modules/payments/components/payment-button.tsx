@@ -5,12 +5,10 @@ import { useRouter } from "next/navigation";
 import { useCartStore } from "@/modules/cart/store/use-cart-store";
 import { useCheckoutStore } from "@/modules/checkout/store/use-checkout-store";
 import { createRazorpayOrder } from "@/modules/payments/actions/create-razorpay-order";
-import { createOrder } from "@/modules/orders/actions/create-order";
+import { placeOrder } from "@/modules/orders/actions/create-order";
 
 declare global {
-  interface Window {
-    Razorpay: any;
-  }
+  interface Window { Razorpay: any; }
 }
 
 export function PaymentButton() {
@@ -24,13 +22,8 @@ export function PaymentButton() {
     if (!address) return;
     setLoading(true);
 
-    const amountInPaise = total() * 100;
-    const result = await createRazorpayOrder(amountInPaise);
-
-    if (!result.success || !result.order) {
-      setLoading(false);
-      return;
-    }
+    const result = await createRazorpayOrder(total() * 100);
+    if (!result.success || !result.order) { setLoading(false); return; }
 
     const options = {
       key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
@@ -38,13 +31,13 @@ export function PaymentButton() {
       currency: result.order.currency,
       order_id: result.order.id,
       name: "Commerce OS",
-      description: "Order Payment",
       handler: async (response: any) => {
-        const orderResult = await createOrder({
+        const orderResult = await placeOrder({
           items,
           address,
           razorpayOrderId: response.razorpay_order_id,
-          paymentId: response.razorpay_payment_id,
+          razorpayPaymentId: response.razorpay_payment_id,
+          razorpaySignature: response.razorpay_signature,
         });
 
         if (orderResult.success) {
@@ -53,10 +46,7 @@ export function PaymentButton() {
           router.push(`/orders/${orderResult.orderId}`);
         }
       },
-      prefill: {
-        name: address.fullName,
-        contact: address.phone,
-      },
+      prefill: { name: address.fullName, contact: address.phone },
       theme: { color: "#000000" },
     };
 
@@ -69,9 +59,9 @@ export function PaymentButton() {
     <button
       onClick={handlePayment}
       disabled={loading}
-      className="w-full bg-black text-white py-3 rounded-xl disabled:opacity-50"
+      className="w-full bg-black text-white py-4 text-sm tracking-widest uppercase disabled:opacity-40 transition-opacity"
     >
-      {loading ? "Processing..." : `Pay ₹${total()}`}
+      {loading ? "Processing..." : `Place Order — ₹${total()}`}
     </button>
   );
 }

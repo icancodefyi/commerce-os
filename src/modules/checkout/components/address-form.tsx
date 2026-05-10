@@ -5,14 +5,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { addressSchema, type AddressFormData } from "../validations/address-schema";
 import { useCheckoutStore } from "../store/use-checkout-store";
 
+const inputClass =
+  "w-full border-b border-zinc-200 bg-transparent py-3 text-sm placeholder:text-zinc-300 focus:outline-none focus:border-zinc-900 transition-colors";
+
 export function AddressForm({ onComplete }: { onComplete: () => void }) {
   const setAddress = useCheckoutStore((s) => s.setAddress);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<AddressFormData>({ resolver: zodResolver(addressSchema) });
+  const { register, handleSubmit, formState: { errors } } = useForm<AddressFormData>({
+    resolver: zodResolver(addressSchema),
+  });
 
   function onSubmit(data: AddressFormData) {
     setAddress(data);
@@ -20,88 +21,53 @@ export function AddressForm({ onComplete }: { onComplete: () => void }) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <h2 className="text-lg font-semibold">Shipping Address</h2>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+      <div>
+        <p className="text-xs tracking-widest uppercase text-zinc-400 mb-6">
+          Shipping Address
+        </p>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div className="col-span-2">
-          <input
-            {...register("fullName")}
-            placeholder="Full Name"
-            className="w-full border p-3 rounded-lg"
-          />
-          {errors.fullName && (
-            <p className="text-red-500 text-xs mt-1">{errors.fullName.message}</p>
-          )}
-        </div>
+        <div className="space-y-6">
+          <div>
+            <input {...register("fullName")} placeholder="Full Name" className={inputClass} />
+            {errors.fullName && <p className="text-xs text-red-400 mt-1">{errors.fullName.message}</p>}
+          </div>
 
-        <div className="col-span-2">
-          <input
-            {...register("phone")}
-            placeholder="Phone Number"
-            className="w-full border p-3 rounded-lg"
-          />
-          {errors.phone && (
-            <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>
-          )}
-        </div>
+          <div>
+            <input {...register("phone")} placeholder="Phone Number" className={inputClass} />
+            {errors.phone && <p className="text-xs text-red-400 mt-1">{errors.phone.message}</p>}
+          </div>
 
-        <div className="col-span-2">
-          <input
-            {...register("line1")}
-            placeholder="Address Line 1"
-            className="w-full border p-3 rounded-lg"
-          />
-          {errors.line1 && (
-            <p className="text-red-500 text-xs mt-1">{errors.line1.message}</p>
-          )}
-        </div>
+          <div>
+            <input {...register("line1")} placeholder="Address Line 1" className={inputClass} />
+            {errors.line1 && <p className="text-xs text-red-400 mt-1">{errors.line1.message}</p>}
+          </div>
 
-        <div className="col-span-2">
-          <input
-            {...register("line2")}
-            placeholder="Address Line 2 (optional)"
-            className="w-full border p-3 rounded-lg"
-          />
-        </div>
+          <div>
+            <input {...register("line2")} placeholder="Address Line 2 (optional)" className={inputClass} />
+          </div>
 
-        <div>
-          <input
-            {...register("city")}
-            placeholder="City"
-            className="w-full border p-3 rounded-lg"
-          />
-          {errors.city && (
-            <p className="text-red-500 text-xs mt-1">{errors.city.message}</p>
-          )}
-        </div>
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <input {...register("city")} placeholder="City" className={inputClass} />
+              {errors.city && <p className="text-xs text-red-400 mt-1">{errors.city.message}</p>}
+            </div>
+            <div>
+              <input {...register("state")} placeholder="State" className={inputClass} />
+              {errors.state && <p className="text-xs text-red-400 mt-1">{errors.state.message}</p>}
+            </div>
+          </div>
 
-        <div>
-          <input
-            {...register("state")}
-            placeholder="State"
-            className="w-full border p-3 rounded-lg"
-          />
-          {errors.state && (
-            <p className="text-red-500 text-xs mt-1">{errors.state.message}</p>
-          )}
-        </div>
-
-        <div>
-          <input
-            {...register("pincode")}
-            placeholder="Pincode"
-            className="w-full border p-3 rounded-lg"
-          />
-          {errors.pincode && (
-            <p className="text-red-500 text-xs mt-1">{errors.pincode.message}</p>
-          )}
+          <div>
+            <input {...register("pincode")} placeholder="Pincode" className={inputClass} />
+            {errors.pincode && <p className="text-xs text-red-400 mt-1">{errors.pincode.message}</p>}
+          </div>
         </div>
       </div>
 
       <button
         type="submit"
-        className="w-full bg-black text-white py-3 rounded-xl"
+        className="w-full bg-black text-white py-4 text-xs tracking-widest uppercase hover:bg-zinc-800 transition-colors"
       >
         Continue to Payment
       </button>
