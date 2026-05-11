@@ -30,6 +30,12 @@ export default function AdminLayout({
         >
           Orders
         </Link>
+        <Link
+          href="/admin/coupons"
+          className="text-sm px-3 py-2 rounded-lg hover:bg-zinc-200 transition"
+        >
+          Coupons
+        </Link>
       </aside>
       <main className="flex-1 p-8">{children}</main>
     </div>

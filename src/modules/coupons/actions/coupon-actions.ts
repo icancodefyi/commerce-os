@@ -36,6 +36,25 @@ export async function toggleCoupon(id: string, active: boolean) {
   }
 }
 
+export async function updateCoupon(id: string, formData: FormData): Promise<void> {
+  try {
+    await connectDB();
+    await Coupon.findByIdAndUpdate(id, {
+      code: (formData.get("code") as string).toUpperCase().trim(),
+      type: formData.get("type"),
+      value: Number(formData.get("value")),
+      minOrder: Number(formData.get("minOrder") ?? 0),
+      usageLimit: Number(formData.get("usageLimit") ?? 0),
+      expiresAt: formData.get("expiresAt") || null,
+    });
+    revalidatePath("/admin/coupons");
+    redirect("/admin/coupons");
+  } catch (error: any) {
+    if (error?.digest?.startsWith("NEXT_REDIRECT")) throw error;
+    console.error(error);
+  }
+}
+
 export async function deleteCoupon(id: string) {
   try {
     await connectDB();
