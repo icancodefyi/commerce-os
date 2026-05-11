@@ -3,6 +3,7 @@
 import crypto from "crypto";
 import { connectDB } from "@/lib/mongodb";
 import { Order } from "@/models/order.model";
+import { Product } from "@/models/product.model";
 import type { Address } from "@/types/address";
 import type { CartItem } from "@/types/cart";
 
@@ -12,6 +13,7 @@ interface PlaceOrderInput {
   razorpayOrderId: string;
   razorpayPaymentId: string;
   razorpaySignature: string;
+  userId?: string;
 }
 
 export async function placeOrder({
@@ -20,6 +22,7 @@ export async function placeOrder({
   razorpayOrderId,
   razorpayPaymentId,
   razorpaySignature,
+  userId,
 }: PlaceOrderInput) {
   try {
     // Verify signature
@@ -56,7 +59,17 @@ export async function placeOrder({
       status: "paid",
       razorpayOrderId,
       paymentId: razorpayPaymentId,
+      userId: userId ?? "",
     });
+
+    // Decrement stock for each item
+    await Promise.all(
+      items.map((i) =>
+        Product.findByIdAndUpdate(i.product._id, {
+          $inc: { stock: -i.quantity },
+        })
+      )
+    );
 
     const plain = order.toObject();
     return { success: true, orderId: plain._id.toString() };

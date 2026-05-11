@@ -2,11 +2,29 @@ import { getProductBySlug } from "@/modules/products/server/queries";
 import { AddToCartButton } from "@/modules/cart/components/add-to-cart-button";
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import { brand } from "@/config/brand";
+import type { Metadata } from "next";
 
 const FALLBACK = "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=600&h=800&fit=crop";
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await getProductBySlug(slug);
+  if (!product) return {};
+  const image = product.images?.[0] ?? FALLBACK;
+  return {
+    title: `${product.title} — ${brand.name}`,
+    description: product.description || brand.seo.description,
+    openGraph: {
+      title: `${product.title} — ${brand.name}`,
+      description: product.description || brand.seo.description,
+      images: [{ url: image, width: 600, height: 800, alt: product.title }],
+    },
+  };
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
@@ -59,7 +77,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           <div className="space-y-3">
             <AddToCartButton product={product} />
             <p className="text-xs text-center text-zinc-400 tracking-wide">
-              Free shipping on orders above ₹999
+              Free shipping on orders above {brand.currency}{brand.freeShippingThreshold}
             </p>
           </div>
 

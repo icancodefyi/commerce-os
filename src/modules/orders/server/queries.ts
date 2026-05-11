@@ -13,3 +13,11 @@ export async function getOrderById(id: string): Promise<OrderType | null> {
   const order = await Order.findById(id).lean();
   return JSON.parse(JSON.stringify(order));
 }
+
+export async function getOrdersByEmail(email: string): Promise<OrderType[]> {
+  await connectDB();
+  const orders = await Order.find({ "address.email": email })
+    .sort({ createdAt: -1 })
+    .lean();
+  return JSON.parse(JSON.stringify(orders));
+}

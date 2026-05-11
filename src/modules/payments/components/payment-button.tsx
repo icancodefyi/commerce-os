@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { useCartStore } from "@/modules/cart/store/use-cart-store";
 import { useCheckoutStore } from "@/modules/checkout/store/use-checkout-store";
 import { createRazorpayOrder } from "@/modules/payments/actions/create-razorpay-order";
 import { placeOrder } from "@/modules/orders/actions/create-order";
+import { useSession } from "@/lib/auth-client";
 
 declare global {
   interface Window { Razorpay: any; }
@@ -17,13 +19,18 @@ export function PaymentButton() {
   const { items, clearCart, total } = useCartStore();
   const address = useCheckoutStore((s) => s.address);
   const clearCheckout = useCheckoutStore((s) => s.clear);
+  const { data: session } = useSession();
 
   async function handlePayment() {
     if (!address) return;
     setLoading(true);
 
     const result = await createRazorpayOrder(total() * 100);
-    if (!result.success || !result.order) { setLoading(false); return; }
+    if (!result.success || !result.order) {
+      toast.error("Could not initiate payment. Please try again.");
+      setLoading(false);
+      return;
+    }
 
     const options = {
       key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
@@ -38,12 +45,16 @@ export function PaymentButton() {
           razorpayOrderId: response.razorpay_order_id,
           razorpayPaymentId: response.razorpay_payment_id,
           razorpaySignature: response.razorpay_signature,
+          userId: session?.user?.id,
         });
 
         if (orderResult.success) {
           clearCart();
           clearCheckout();
+          toast.success("Order placed successfully!");
           router.push(`/orders/${orderResult.orderId}`);
+        } else {
+          toast.error(orderResult.error ?? "Order failed. Please contact support.");
         }
       },
       prefill: { name: address.fullName, contact: address.phone },

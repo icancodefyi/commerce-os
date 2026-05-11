@@ -9,6 +9,7 @@ const AddressSchema = new Schema(
     city: { type: String, required: true },
     state: { type: String, required: true },
     pincode: { type: String, required: true },
+    email: { type: String, default: "" },
   },
   { _id: false }
 );
@@ -37,6 +38,7 @@ const OrderSchema = new Schema(
     },
     paymentId: { type: String, default: "" },
     razorpayOrderId: { type: String, default: "" },
+    userId: { type: String, default: "" },
   },
   { timestamps: true }
 );
