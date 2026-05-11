@@ -3,10 +3,11 @@
 import { connectDB } from "@/lib/mongodb";
 import { Wishlist } from "@/models/wishlist.model";
 import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export async function toggleWishlist(productId: string) {
   try {
-    const session = await auth.api.getSession();
+    const session = await auth.api.getSession({ headers: await headers() });
     if (!session?.user?.id) {
       return { success: false, error: "Not authenticated" };
     }
@@ -43,7 +44,7 @@ export async function toggleWishlist(productId: string) {
 
 export async function getWishlist() {
   try {
-    const session = await auth.api.getSession();
+    const session = await auth.api.getSession({ headers: await headers() });
     if (!session?.user?.id) {
       return { success: false, error: "Not authenticated" };
     }
@@ -63,7 +64,7 @@ export async function getWishlist() {
 
 export async function isInWishlist(productId: string) {
   try {
-    const session = await auth.api.getSession();
+    const session = await auth.api.getSession({ headers: await headers() });
     if (!session?.user?.id) {
       return false;
     }

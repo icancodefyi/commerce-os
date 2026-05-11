@@ -5,13 +5,14 @@ import { CouponActions } from "@/modules/coupons/components/coupon-actions";
 import { Pagination } from "@/components/ui/pagination";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export default async function CouponsPage({
   searchParams,
 }: {
   searchParams: { page?: string };
 }) {
-  const session = await auth.api.getSession();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user || session.user.role !== "admin") {
     redirect("/sign-in");
   }

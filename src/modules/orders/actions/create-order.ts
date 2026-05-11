@@ -7,6 +7,7 @@ import { Product } from "@/models/product.model";
 import type { Address } from "@/types/address";
 import type { CartItem } from "@/types/cart";
 import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 interface PlaceOrderInput {
   items: CartItem[];
@@ -28,7 +29,7 @@ export async function placeOrder({
   try {
     // Get userId from auth if not provided
     if (!userId) {
-      const session = await auth.api.getSession();
+      const session = await auth.api.getSession({ headers: await headers() });
       if (session?.user?.id) {
         userId = session.user.id;
       }

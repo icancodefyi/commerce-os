@@ -5,13 +5,14 @@ import { connectDB } from "@/lib/mongodb";
 import { Coupon } from "@/models/coupon.model";
 import { EditCouponForm } from "@/modules/coupons/components/edit-coupon-form";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 
 export default async function EditCouponPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const session = await auth.api.getSession();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user || session.user.role !== "admin") {
     redirect("/sign-in");
   }

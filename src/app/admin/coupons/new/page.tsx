@@ -2,9 +2,10 @@ import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { NewCouponForm } from "@/modules/coupons/components/new-coupon-form";
+import { headers } from "next/headers";
 
 export default async function NewCouponPage() {
-  const session = await auth.api.getSession();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user || session.user.role !== "admin") {
     redirect("/sign-in");
   }
