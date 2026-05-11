@@ -1,25 +1,5 @@
 import Link from "next/link";
-
-const footerLinks = {
-  Shop: [
-    { label: "New Arrivals", href: "/products" },
-    { label: "Collections", href: "/products" },
-    { label: "Leather Goods", href: "/products" },
-    { label: "Fine Jewellery", href: "/products" },
-  ],
-  Company: [
-    { label: "Our Story", href: "/" },
-    { label: "Boutiques", href: "/" },
-    { label: "Careers", href: "/" },
-    { label: "Press", href: "/" },
-  ],
-  Support: [
-    { label: "Contact", href: "/" },
-    { label: "Shipping", href: "/" },
-    { label: "Returns", href: "/" },
-    { label: "Care Guide", href: "/" },
-  ],
-};
+import { brand } from "@/config/brand";
 
 export function StoreFooter() {
   return (
@@ -28,26 +8,25 @@ export function StoreFooter() {
         <div className="grid md:grid-cols-5 gap-12 mb-16">
           {/* Brand */}
           <div className="md:col-span-2">
-            <p className="font-serif text-2xl mb-4">Commerce OS</p>
+            <p className="font-serif text-2xl mb-4">{brand.name}</p>
             <p className="text-xs text-zinc-500 leading-relaxed max-w-xs mb-8">
-              A premium commerce experience built for those who understand that
-              true luxury is never loud.
+              {brand.description}
             </p>
             <div className="flex items-center gap-5">
-              {["Instagram", "Pinterest", "Twitter"].map((s) => (
+              {Object.entries(brand.social).map(([name, href]) => (
                 <Link
-                  key={s}
-                  href="/"
-                  className="text-[10px] tracking-[0.15em] uppercase text-zinc-600 hover:text-zinc-300 transition-colors"
+                  key={name}
+                  href={href}
+                  className="text-[10px] tracking-[0.15em] uppercase text-zinc-600 hover:text-zinc-300 transition-colors capitalize"
                 >
-                  {s}
+                  {name}
                 </Link>
               ))}
             </div>
           </div>
 
           {/* Links */}
-          {Object.entries(footerLinks).map(([group, links]) => (
+          {Object.entries(brand.footerLinks).map(([group, links]) => (
             <div key={group}>
               <p className="text-[10px] tracking-[0.2em] uppercase text-zinc-600 mb-5">
                 {group}
@@ -70,7 +49,7 @@ export function StoreFooter() {
 
         <div className="border-t border-zinc-800 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-[10px] text-zinc-600 tracking-wide">
-            © {new Date().getFullYear()} Commerce OS. All rights reserved.
+            © {new Date().getFullYear()} {brand.name}. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
             {["Privacy Policy", "Terms of Service"].map((item) => (

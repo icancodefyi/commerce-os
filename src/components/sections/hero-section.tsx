@@ -3,17 +3,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { brand } from "@/config/brand";
 
 const ease = [0.25, 0.1, 0.25, 1] as const;
 
-const tickerItems = [
-  "8L+ Happy Customers",
-  "Gifts For Her @ 50% OFF",
-  "Ships in 24 hours",
-  "Free shipping above ₹2,999",
-  "Handcrafted with care",
-  "Easy returns",
-];
+const tickerItems = brand.tickerItems;
 
 export function HeroSection() {
   return (
@@ -42,7 +36,7 @@ export function HeroSection() {
                 transition={{ duration: 0.6, delay: 0.1, ease }}
                 className="text-[10px] tracking-[0.28em] uppercase text-white/70 mb-4"
               >
-                Commerce OS
+                {brand.name}
               </motion.p>
 
               <motion.h1

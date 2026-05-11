@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
+import { brand } from "@/config/brand";
 import "./globals.css";
 
 const inter = Inter({
@@ -13,8 +14,9 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Commerce OS",
-  description: "A premium commerce experience.",
+  title: brand.seo.title,
+  description: brand.seo.description,
+  keywords: brand.seo.keywords,
 };
 
 export default function RootLayout({

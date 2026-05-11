@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { brand } from "@/config/brand";
 
 export default function AdminLayout({
   children,
@@ -9,7 +10,7 @@ export default function AdminLayout({
     <div className="flex min-h-screen">
       <aside className="w-56 border-r bg-zinc-50 flex flex-col p-4 gap-1">
         <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-3">
-          Commerce OS
+          {brand.name}
         </p>
         <Link
           href="/admin/products"

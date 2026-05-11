@@ -6,13 +6,9 @@ import { ShoppingBag, Search, User, Menu, X } from "lucide-react";
 import { useCartStore } from "@/modules/cart/store/use-cart-store";
 import { CartDrawer } from "@/modules/cart/components/cart-drawer";
 import { useSession, signOut } from "@/lib/auth-client";
+import { brand } from "@/config/brand";
 
-const navLinks = [
-  { label: "New Arrivals", href: "/products" },
-  { label: "Collections", href: "/products" },
-  { label: "Our Story", href: "/" },
-  { label: "Boutiques", href: "/" },
-];
+const navLinks = brand.navLinks;
 
 export function StoreNavbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -42,7 +38,7 @@ export function StoreNavbar() {
             href="/"
             className="font-serif text-xl tracking-wide shrink-0 z-10"
           >
-            Commerce OS
+            {brand.name}
           </Link>
 
           {/* Center nav */}
@@ -118,7 +114,7 @@ export function StoreNavbar() {
       >
         <div className="flex items-center justify-between px-6 h-16 border-b border-zinc-100">
           <Link href="/" className="font-serif text-xl" onClick={() => setMobileOpen(false)}>
-            Commerce OS
+            {brand.name}
           </Link>
           <button onClick={() => setMobileOpen(false)}>
             <X size={20} strokeWidth={1.5} />
