@@ -29,7 +29,11 @@ export async function createProduct(formData: FormData): Promise<void> {
       ? validated.images.split(",").map((s) => s.trim()).filter(Boolean)
       : [];
 
-    await Product.create({ ...validated, slug, images });
+    const variants = validated.variants
+      ? validated.variants.split(",").map((s) => s.trim()).filter(Boolean)
+      : [];
+
+    await Product.create({ ...validated, slug, images, variants });
 
     revalidatePath("/admin/products");
     redirect("/admin/products");

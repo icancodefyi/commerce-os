@@ -9,4 +9,5 @@ export const productSchema = z.object({
   category: z.string().optional().default(""),
   images: z.string().optional().default(""), // comma-separated URLs
   status: z.enum(["draft", "active"]).default("active"),
+  variants: z.string().optional().default(""), // comma-separated variant options
 });

@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const addressSchema = z.object({
   fullName: z.string().min(2),
+  email: z.string().email(),
   phone: z.string().min(10),
   line1: z.string().min(3),
   line2: z.string().optional(),

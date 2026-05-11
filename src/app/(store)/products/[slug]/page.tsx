@@ -1,5 +1,6 @@
 import { getProductBySlug } from "@/modules/products/server/queries";
 import { AddToCartButton } from "@/modules/cart/components/add-to-cart-button";
+import { VariantSelector } from "@/modules/products/components/variant-selector";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { brand } from "@/config/brand";
@@ -73,6 +74,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
               {product.description}
             </p>
           )}
+
+          <VariantSelector variants={product.variants} />
 
           <div className="space-y-3">
             <AddToCartButton product={product} />

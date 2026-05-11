@@ -34,6 +34,11 @@ export function AddressForm({ onComplete }: { onComplete: () => void }) {
           </div>
 
           <div>
+            <input {...register("email")} type="email" placeholder="Email Address" className={inputClass} />
+            {errors.email && <p className="text-xs text-red-400 mt-1">{errors.email.message}</p>}
+          </div>
+
+          <div>
             <input {...register("phone")} placeholder="Phone Number" className={inputClass} />
             {errors.phone && <p className="text-xs text-red-400 mt-1">{errors.phone.message}</p>}
           </div>

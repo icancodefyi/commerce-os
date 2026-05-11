@@ -1,6 +1,8 @@
 "use client";
 
 import { useCartStore } from "@/modules/cart/store/use-cart-store";
+import { useCheckoutStore } from "@/modules/checkout/store/use-checkout-store";
+import { CouponInput } from "@/modules/checkout/components/coupon-input";
 import { X, Minus, Plus } from "lucide-react";
 
 interface CartDrawerProps {
@@ -10,6 +12,7 @@ interface CartDrawerProps {
 
 export function CartDrawer({ open, onClose }: CartDrawerProps) {
   const { items, removeItem, updateQuantity, total } = useCartStore();
+  const { coupon, setCoupon } = useCheckoutStore();
 
   return (
     <>
@@ -84,10 +87,25 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
 
         {/* Footer */}
         {items.length > 0 && (
-          <div className="px-8 py-6 border-t border-zinc-100 space-y-5">
+          <div className="px-8 py-6 border-t border-zinc-100 space-y-4">
+            <CouponInput
+              total={total()}
+              applied={coupon}
+              onApply={setCoupon}
+            />
             <div className="flex justify-between items-baseline">
+              <span className="text-xs tracking-widest uppercase text-zinc-400">Subtotal</span>
+              <span className="text-sm">₹{total()}</span>
+            </div>
+            {coupon && (
+              <div className="flex justify-between items-baseline text-green-600">
+                <span className="text-xs tracking-widest uppercase">Discount</span>
+                <span className="text-sm">−₹{coupon.discount}</span>
+              </div>
+            )}
+            <div className="flex justify-between items-baseline border-t border-zinc-100 pt-3">
               <span className="text-xs tracking-widest uppercase text-zinc-400">Total</span>
-              <span className="font-serif text-2xl">₹{total()}</span>
+              <span className="font-serif text-2xl">₹{total() - (coupon?.discount ?? 0)}</span>
             </div>
             <a
               href="/checkout"

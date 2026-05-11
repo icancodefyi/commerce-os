@@ -18,14 +18,17 @@ export function PaymentButton() {
   const router = useRouter();
   const { items, clearCart, total } = useCartStore();
   const address = useCheckoutStore((s) => s.address);
+  const coupon = useCheckoutStore((s) => s.coupon);
   const clearCheckout = useCheckoutStore((s) => s.clear);
   const { data: session } = useSession();
+
+  const finalTotal = total() - (coupon?.discount ?? 0);
 
   async function handlePayment() {
     if (!address) return;
     setLoading(true);
 
-    const result = await createRazorpayOrder(total() * 100);
+    const result = await createRazorpayOrder(finalTotal * 100);
     if (!result.success || !result.order) {
       toast.error("Could not initiate payment. Please try again.");
       setLoading(false);
@@ -72,7 +75,7 @@ export function PaymentButton() {
       disabled={loading}
       className="w-full bg-black text-white py-4 text-sm tracking-widest uppercase disabled:opacity-40 transition-opacity"
     >
-      {loading ? "Processing..." : `Place Order — ₹${total()}`}
+      {loading ? "Processing..." : `Place Order — ₹${finalTotal}`}
     </button>
   );
 }

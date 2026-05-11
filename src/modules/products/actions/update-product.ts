@@ -27,7 +27,11 @@ export async function updateProduct(id: string, formData: FormData) {
       ? validated.images.split(",").map((s) => s.trim()).filter(Boolean)
       : [];
 
-    await Product.findByIdAndUpdate(id, { ...validated, slug, images });
+    const variants = validated.variants
+      ? validated.variants.split(",").map((s) => s.trim()).filter(Boolean)
+      : [];
+
+    await Product.findByIdAndUpdate(id, { ...validated, slug, images, variants });
 
     revalidatePath("/admin/products");
     revalidatePath(`/products/${slug}`);

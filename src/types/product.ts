@@ -9,6 +9,7 @@ export interface Product {
   stock: number;
   category: string;
   status: "draft" | "active";
+  variants: string[];
   createdAt: string;
   updatedAt: string;
 }

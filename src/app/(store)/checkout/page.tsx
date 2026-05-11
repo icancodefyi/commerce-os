@@ -56,6 +56,7 @@ export default function CheckoutPage() {
                   </div>
                   <div className="space-y-1 text-sm text-zinc-600">
                     <p className="font-medium text-zinc-900">{address?.fullName}</p>
+                    <p>{address?.email}</p>
                     <p>{address?.line1}{address?.line2 ? `, ${address.line2}` : ""}</p>
                     <p>{address?.city}, {address?.state} — {address?.pincode}</p>
                     <p className="text-zinc-400">{address?.phone}</p>

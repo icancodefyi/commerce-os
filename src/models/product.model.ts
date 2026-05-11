@@ -49,6 +49,11 @@ const ProductSchema = new Schema(
       enum: ["draft", "active"],
       default: "active",
     },
+
+    variants: {
+      type: [String],
+      default: [],
+    },
   },
   {
     timestamps: true,
