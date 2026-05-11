@@ -5,26 +5,21 @@ export async function middleware(req: NextRequest) {
   const session = getSessionCookie(req);
   const { pathname } = req.nextUrl;
 
-  if (!session) {
-    const loginUrl = new URL("/sign-in", req.url);
-    loginUrl.searchParams.set("callbackUrl", pathname);
-    return NextResponse.redirect(loginUrl);
+  // Protect /account routes - just check session exists
+  if (pathname.startsWith("/account")) {
+    if (!session) {
+      const loginUrl = new URL("/sign-in", req.url);
+      loginUrl.searchParams.set("callbackUrl", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
   }
 
-  // Admin routes require additional role check via API
+  // Admin routes - just check session exists (role check happens in server component)
   if (pathname.startsWith("/admin")) {
-    const sessionRes = await fetch(
-      new URL("/api/auth/get-session", req.url),
-      { headers: { cookie: req.headers.get("cookie") ?? "" } }
-    );
-
-    if (sessionRes.ok) {
-      const data = await sessionRes.json();
-      if (data?.user?.role !== "admin") {
-        return NextResponse.redirect(new URL("/", req.url));
-      }
-    } else {
-      return NextResponse.redirect(new URL("/sign-in", req.url));
+    if (!session) {
+      const loginUrl = new URL("/sign-in", req.url);
+      loginUrl.searchParams.set("callbackUrl", pathname);
+      return NextResponse.redirect(loginUrl);
     }
   }
 
