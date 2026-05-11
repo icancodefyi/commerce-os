@@ -13,6 +13,12 @@ export default function AdminLayout({
           {brand.name}
         </p>
         <Link
+          href="/admin"
+          className="text-sm px-3 py-2 rounded-lg hover:bg-zinc-200 transition"
+        >
+          Dashboard
+        </Link>
+        <Link
           href="/admin/products"
           className="text-sm px-3 py-2 rounded-lg hover:bg-zinc-200 transition"
         >
