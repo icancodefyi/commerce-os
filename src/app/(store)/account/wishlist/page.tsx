@@ -7,9 +7,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { WishlistButton } from "@/modules/users/components/wishlist-button";
 import type { Product as ProductType } from "@/types/product";
+import { headers } from "next/headers";
 
 export default async function WishlistPage() {
-  const session = await auth.api.getSession();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     redirect("/sign-in?callbackUrl=/account/wishlist");
   }
