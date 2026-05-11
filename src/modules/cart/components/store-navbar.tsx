@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { ShoppingBag, Search, User, Menu, X } from "lucide-react";
 import { useCartStore } from "@/modules/cart/store/use-cart-store";
 import { CartDrawer } from "@/modules/cart/components/cart-drawer";
+import { useSession, signOut } from "@/lib/auth-client";
 
 const navLinks = [
   { label: "New Arrivals", href: "/products" },
@@ -18,6 +19,7 @@ export function StoreNavbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const count = useCartStore((s) => s.count());
+  const { data: session } = useSession();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -61,9 +63,29 @@ export function StoreNavbar() {
             <button className="hidden md:block text-zinc-500 hover:text-zinc-900 transition-colors">
               <Search size={16} strokeWidth={1.5} />
             </button>
-            <button className="hidden md:block text-zinc-500 hover:text-zinc-900 transition-colors">
-              <User size={16} strokeWidth={1.5} />
-            </button>
+            {session ? (
+              <div className="hidden md:flex items-center gap-4">
+                <Link
+                  href="/account/orders"
+                  className="text-[11px] tracking-[0.15em] uppercase text-zinc-500 hover:text-zinc-900 transition-colors"
+                >
+                  Account
+                </Link>
+                <button
+                  onClick={() => signOut()}
+                  className="text-[11px] tracking-[0.15em] uppercase text-zinc-400 hover:text-zinc-900 transition-colors"
+                >
+                  Sign out
+                </button>
+              </div>
+            ) : (
+              <Link
+                href="/sign-in"
+                className="hidden md:block text-zinc-500 hover:text-zinc-900 transition-colors"
+              >
+                <User size={16} strokeWidth={1.5} />
+              </Link>
+            )}
             <button
               onClick={() => setDrawerOpen(true)}
               className="relative text-zinc-700 hover:text-zinc-900 transition-colors flex items-center gap-1.5"

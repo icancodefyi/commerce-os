@@ -21,12 +21,12 @@ export function HeroSection() {
       {/* ── Full-bleed image with overlaid content ── */}
       <section className="relative w-full h-[78vh] min-h-[520px] overflow-hidden">
         {/* Background image */}
-        <Image
-          src="https://palmonas.com/cdn/shop/files/web_2x-100.webp?crop=center&height=794&v=1778121317&width=2000"
-          alt="New Collection"
-          fill
-          priority
+        <video
+          src="https://palmonas.com/cdn/shop/videos/c/vp/f81ab4ed2ae540f18a8ca028d4a3789c/f81ab4ed2ae540f18a8ca028d4a3789c.HD-720p-4.5Mbps-65417493.mp4?v=0"
           className="object-cover object-center"
+          autoPlay
+          loop
+          muted
         />
 
         {/* Very light left-side fade so text stays readable */}
