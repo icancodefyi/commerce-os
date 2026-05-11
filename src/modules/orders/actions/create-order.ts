@@ -25,7 +25,7 @@ export async function placeOrder({
   userId,
 }: PlaceOrderInput) {
   try {
-    // Verify signature
+    // Verify Razorpay signature
     const body = `${razorpayOrderId}|${razorpayPaymentId}`;
     const expectedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET!)
@@ -37,6 +37,25 @@ export async function placeOrder({
     }
 
     await connectDB();
+
+    // Server-side stock validation
+    const productIds = items.map((i) => i.product._id);
+    const dbProducts = await Product.find({ _id: { $in: productIds } }).lean();
+
+    for (const item of items) {
+      const dbProduct = dbProducts.find(
+        (p: any) => p._id.toString() === item.product._id
+      );
+      if (!dbProduct) {
+        return { success: false, error: `"${item.product.title}" no longer exists.` };
+      }
+      if ((dbProduct as any).stock < item.quantity) {
+        return {
+          success: false,
+          error: `"${item.product.title}" only has ${(dbProduct as any).stock} unit(s) left.`,
+        };
+      }
+    }
 
     const orderItems = items.map((i) => ({
       productId: i.product._id,
@@ -62,7 +81,7 @@ export async function placeOrder({
       userId: userId ?? "",
     });
 
-    // Decrement stock for each item
+    // Decrement stock
     await Promise.all(
       items.map((i) =>
         Product.findByIdAndUpdate(i.product._id, {

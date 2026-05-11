@@ -3,8 +3,8 @@
 import { connectDB } from "@/lib/mongodb";
 import { Product } from "@/models/product.model";
 import { productSchema } from "../validations/product-schema";
-import slugify from "slugify";
 import { revalidatePath } from "next/cache";
+import { generateUniqueSlug } from "@/lib/slug";
 
 export async function updateProduct(id: string, formData: FormData) {
   try {
@@ -21,7 +21,7 @@ export async function updateProduct(id: string, formData: FormData) {
       status: formData.get("status"),
     });
 
-    const slug = slugify(validated.title, { lower: true, strict: true });
+    const slug = await generateUniqueSlug(validated.title, id);
 
     const images = validated.images
       ? validated.images.split(",").map((s) => s.trim()).filter(Boolean)

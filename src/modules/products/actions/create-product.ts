@@ -1,11 +1,11 @@
 "use server";
 
-import slugify from "slugify";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { connectDB } from "@/lib/mongodb";
 import { Product } from "@/models/product.model";
 import { productSchema } from "../validations/product-schema";
+import { generateUniqueSlug } from "@/lib/slug";
 
 export async function createProduct(formData: FormData): Promise<void> {
   try {
@@ -22,7 +22,7 @@ export async function createProduct(formData: FormData): Promise<void> {
       status: formData.get("status"),
     });
 
-    const slug = slugify(validated.title, { lower: true, strict: true });
+    const slug = await generateUniqueSlug(validated.title);
 
     // Parse comma-separated image URLs into array
     const images = validated.images

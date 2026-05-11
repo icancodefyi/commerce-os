@@ -1,15 +1,26 @@
 import { getOrders } from "@/modules/orders/server/queries";
 import { OrderStatusSelect } from "@/modules/orders/components/order-status-select";
+import { Pagination } from "@/components/ui/pagination";
 import { brand } from "@/config/brand";
 
-export default async function AdminOrdersPage() {
-  const orders = await getOrders();
+const PAGE_SIZE = 20;
+
+interface AdminOrdersPageProps {
+  searchParams: Promise<{ page?: string }>;
+}
+
+export default async function AdminOrdersPage({ searchParams }: AdminOrdersPageProps) {
+  const { page: pageParam } = await searchParams;
+  const page = Math.max(1, parseInt(pageParam ?? "1"));
+  const allOrders = await getOrders();
+  const totalPages = Math.ceil(allOrders.length / PAGE_SIZE);
+  const orders = allOrders.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   return (
     <div>
       <div className="mb-6">
         <h1 className="text-2xl font-bold">Orders</h1>
-        <p className="text-sm text-zinc-400 mt-1">{orders.length} total orders</p>
+        <p className="text-sm text-zinc-400 mt-1">{allOrders.length} total orders</p>
       </div>
 
       <div className="border rounded-xl overflow-hidden bg-white">
@@ -54,6 +65,8 @@ export default async function AdminOrdersPage() {
           </tbody>
         </table>
       </div>
+
+      <Pagination page={page} totalPages={totalPages} basePath="/admin/orders" />
     </div>
   );
 }
