@@ -6,6 +6,7 @@ import { Order } from "@/models/order.model";
 import { Product } from "@/models/product.model";
 import type { Address } from "@/types/address";
 import type { CartItem } from "@/types/cart";
+import { auth } from "@/lib/auth";
 
 interface PlaceOrderInput {
   items: CartItem[];
@@ -25,6 +26,14 @@ export async function placeOrder({
   userId,
 }: PlaceOrderInput) {
   try {
+    // Get userId from auth if not provided
+    if (!userId) {
+      const session = await auth.api.getSession();
+      if (session?.user?.id) {
+        userId = session.user.id;
+      }
+    }
+
     // Verify Razorpay signature
     const body = `${razorpayOrderId}|${razorpayPaymentId}`;
     const expectedSignature = crypto

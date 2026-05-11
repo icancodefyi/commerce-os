@@ -7,7 +7,6 @@ import { useCartStore } from "@/modules/cart/store/use-cart-store";
 import { useCheckoutStore } from "@/modules/checkout/store/use-checkout-store";
 import { createRazorpayOrder } from "@/modules/payments/actions/create-razorpay-order";
 import { placeOrder } from "@/modules/orders/actions/create-order";
-import { useSession } from "@/lib/auth-client";
 
 declare global {
   interface Window { Razorpay: any; }
@@ -20,7 +19,6 @@ export function PaymentButton() {
   const address = useCheckoutStore((s) => s.address);
   const coupon = useCheckoutStore((s) => s.coupon);
   const clearCheckout = useCheckoutStore((s) => s.clear);
-  const { data: session } = useSession();
 
   const finalTotal = total() - (coupon?.discount ?? 0);
 
@@ -48,7 +46,6 @@ export function PaymentButton() {
           razorpayOrderId: response.razorpay_order_id,
           razorpayPaymentId: response.razorpay_payment_id,
           razorpaySignature: response.razorpay_signature,
-          userId: session?.user?.id,
         });
 
         if (orderResult.success) {

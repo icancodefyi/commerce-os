@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { ShoppingBag, Search, User, Menu, X } from "lucide-react";
 import { useCartStore } from "@/modules/cart/store/use-cart-store";
 import { CartDrawer } from "@/modules/cart/components/cart-drawer";
-import { useSession, signOut } from "@/lib/auth-client";
+import { signOut } from "@/lib/auth-client";
 import { brand } from "@/config/brand";
 
 const navLinks = brand.navLinks;
@@ -14,8 +14,19 @@ export function StoreNavbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const count = useCartStore((s) => s.count());
-  const { data: session } = useSession();
+
+  useEffect(() => {
+    // Check if user is logged in
+    try {
+      fetch("/api/auth/session", { credentials: "include" })
+        .then((res) => setIsLoggedIn(res.ok))
+        .catch(() => setIsLoggedIn(false));
+    } catch {
+      setIsLoggedIn(false);
+    }
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -59,7 +70,7 @@ export function StoreNavbar() {
             <button className="hidden md:block text-zinc-500 hover:text-zinc-900 transition-colors">
               <Search size={16} strokeWidth={1.5} />
             </button>
-            {session ? (
+            {isLoggedIn ? (
               <div className="hidden md:flex items-center gap-4">
                 <Link
                   href="/account/orders"
